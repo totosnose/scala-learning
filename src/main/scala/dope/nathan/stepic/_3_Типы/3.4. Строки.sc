@@ -1,3 +1,5 @@
+import scala.util.matching.Regex
+
 val name = "friend"
 
 // конкатенация
@@ -53,3 +55,7 @@ val ss =
   """.stripMargin
 
 ss.split("\n").length
+
+val pattern = new Regex("[^_][a-z]_*")
+val test = "_snake_case"
+println((pattern findAllIn test).mkString(","))
