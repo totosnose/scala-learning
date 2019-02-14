@@ -1,8 +1,8 @@
 # ignored folders
 .idea/*
-/out/*
-/target/*
-/project/*
+out/*
+target/*
+project/*
 
 # ignored files
 *.iml
