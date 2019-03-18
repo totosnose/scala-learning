@@ -74,7 +74,22 @@ def addressInfo(address: Address): String = address match {
   case _ ⇒ "no info"
 }
 
-//TODO last primers
+def addressInfo2(address: Address): String = address match {
+  case Address("Russia", "Moscow") ⇒ "russian capital"
+  case Address("Russia", _) ⇒ "russian"
+  case Address("Japan", "Tokio") ⇒ "japanese capital"
+  case Address("Japan", _) ⇒ "japanese"
+  case _ ⇒ "no info"
+}
+// и использовать
+def addressInfo3(address: Address): String = address match {
+  case Address("Russia", "Moscow") ⇒ "russian capital"
+  case Address("Russia", city) ⇒ s"russian $city"
+  case Address("Japan", "Tokio") ⇒ "japanese capital"
+  case Address("Japan", city) ⇒ s"japanese $city"
+  case _ ⇒ "no info"
+}
+
 
 
 // КОЛЛЕКЦИИ
