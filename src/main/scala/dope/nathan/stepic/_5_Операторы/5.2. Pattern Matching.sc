@@ -182,4 +182,27 @@ def getInfo(address: Address3): String =
 getInfo(Address3("Russia", "Saratov"))
 getInfo(Address3("USSR", "Saratov"))
 
-//TODO last 50 sec
+// - использование групп
+def getInfo2(address: Address3): String =
+  address match {
+    case Address3(country@regex(_), city) => // country сопоставляется со всем суб-выражением внутри case
+      s"$city, $country"
+    case Address3(_, _) => "unknown country"
+  }
+
+getInfo2(Address3("Russia", "Saratov"))
+getInfo2(Address3("USSR", "Saratov"))
+
+//val input = List("oleg", "oleg@email.com", "7bdaf0a1be3", "a8af118b1a2", "28d74b7a3fe")
+val input = List("oleg")
+//, "7bdaf0a1be3", "a8af118b1a2", "28d74b7a3fe")
+
+val regName = "(^[a-zA-Z]+$)|(([a-zA-Z]+)(\\s\\w+@\\w+\\.\\w+))".r
+val regMail = "(\\w+@\\w+\\.\\w+)".r
+
+val result = input match {
+//  case List(regName(name), regMail(mail), _*) => List(name, mail.substring(mail.indexOf('@')))
+  case List(regName(name)) => List(name, name.substring(name.indexOf('@')))
+//  case List(_,_) => "invalid"
+}
+println(result)
