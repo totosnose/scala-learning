@@ -38,4 +38,19 @@ val list: List[Double] = List(4, 16, 25, -9)
 //val result = list.map(Math.log)
 val result = list.collect(log)
 
+// практика
+case class Jar(name: String, value: Int, price: Double)
+val jars = List(
+  Jar("Морской синий 6л", 6, 3000),
+  Jar("Огненно-красный 12л", 12, 5000),
+  Jar("Огненно-коричневый 1л", 1, 5000)
+)
+
+val discount: PartialFunction[Jar, String] = {
+  case j if j.value > 10 => s"${j.name} ${j.price * 0.1}"
+  case j if j.value > 4 => s"${j.name} ${j.price * 0.05}"
+}
+
+jars.collect(discount)
+
 

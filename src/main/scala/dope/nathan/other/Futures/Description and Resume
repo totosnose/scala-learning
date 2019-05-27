@@ -1,0 +1,81 @@
+I. Description
+
+Ref: https://alvinalexander.com/scala/concurrency-with-scala-futures-tutorials-examples
+
+File Seq:
+ 1. FutureWithBlocking
+ 2. onComplete
+ 3. onSuccessAndFailure
+ 4. FutureWithT
+ 5. RunningMultipleCalcs
+
+II. Resume
+
+1. For-comprehensions (combinators: map, flatMap, filter, foreach, recoverWith, fallbackTo, andThen)
+
+ * As shown in the Solution, callback methods are good for some purposes. But when you need to run multiple
+   computations in parallel, and join their results together when they’re finished running, using combinators
+   like map, foreach, and other approaches — like a for-comprehension — provides more concise and readable code.
+   The for-comprehension was shown in the Solution.
+
+ * The recover, recoverWith, and fallbackTo combinators provide ways of handling failure with futures. If the future
+   they’re applied to returns successfully, you get that (desired) result, but if it fails, these methods do what
+   their names suggest, giving you a way to recover from the failure.
+
+ * As a short example, you can use the fallbackTo method like this:
+   val meaning = calculateMeaningOfLife() fallbackTo 42
+
+ * The andThen combinator gives you a nice syntax for running whatever code you want to run when a future returns,
+   like this:
+        var meaning = 0
+        Future {
+            meaning = calculateMeaningOfLife()
+        } andThen {
+            println(s"meaning of life is $meaning")
+        }
+
+
+2. A future and ExecutionContext
+
+ The following statements describe the basic concepts of a future, and the ExecutionContext that a future relies on.
+
+ * A Future[T] is a container that runs a computation concurrently, and at some future time may return either
+   (a) a result of type T or (b) an exception.
+
+ * Computation of your algorithm starts at some nondeterministic time after the future is created, running on
+   a thread assigned to it by the execution context.
+
+ * The result of the computation becomes available once the future completes.
+
+ * When it returns a result, a future is said to be completed. It may either be successfully completed, or failed.
+
+ * As shown in the examples, a future provides an interface for reading the value that has been computed. This
+   includes callback methods and other approaches, such as a for-comprehension, map, flatMap, etc.
+
+ * An ExecutionContext executes a task it’s given. You can think of it as being like a thread pool.
+
+ * The ExecutionContext.Implicits.global import statement shown in the examples imports the default global
+   execution context.
+
+
+3. Callback methods
+
+ The following statements describe the use of the callback methods that can be used with futures.
+
+ * Callback methods are called asynchronously when a future completes.
+ 
+ * The callback methods onComplete, onSuccess, onFailure, are demonstrated in the Solution.
+ 
+ * A callback method is executed by some thread, some time after the future is completed. From the Scala Futures
+   documentation, “There is no guarantee that it will be called by the thread that completed the future or
+   the thread that created the callback.”
+
+ * The order in which callbacks are executed is not guaranteed.
+
+ * onComplete takes a callback function of type Try[T] => U.
+
+ * (@deprecated) onSuccess and onFailure take partial functions. You only need to handle the desired case.
+   (See Recipe 9.8, “Creating Partial Functions” for more information on partial functions.)
+
+ * onComplete, onSuccess, and onFailure have the result type Unit, so they can’t be chained. This design was
+   intentional, to avoid any suggestion that callbacks may be executed in a particular order.
