@@ -47,3 +47,35 @@ val animal4 = new Animal4 {
 
 // при создании абстрактного класса необходимо передавать все параметры
 val animal2 = new Animal2("Bobik"){}
+
+
+// Практика
+abstract class User(name: String) {
+  def friends: List[User]
+  def friendsOfFriends: List[Any] =
+    (for {
+      friend <- friends
+      friend2 <- friend.friends if friend2 != this
+    } yield friend2).distinct
+
+  override def toString: String = name
+}
+
+lazy val oleg: User = new User("Oleg") {
+  def friends: List[User] = List(katya, masha)
+}
+
+lazy val katya: User = new User("Katya") {
+  def friends: List[User] = List(oleg, anton)
+}
+
+lazy val masha: User = new User("Masha") {
+  def friends: List[User] = List(katya, anton)
+}
+
+lazy val anton: User = new User("Anton") {
+  def friends: List[User] = List(katya, masha)
+}
+
+oleg.friends
+oleg.friendsOfFriends
