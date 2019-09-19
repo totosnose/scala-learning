@@ -79,18 +79,53 @@ val nums11 = for {
 // - комбинаторы асинхронных коллекций Source, Observable, Stream
 // - запись вычислений при функциональном подходе
 
-// todo homework
-val list1 = List(3, 1, 5, 7)
-val list2 = List(2, 4, 6, 8)
-val list3 = List(1, 3, 5, 8, 10, 12, 14)
-val res = for {
-  x <- list1
-  y <- list2 if y != x
-  z <- list3 if z == x * y
-}  yield (x, y)
+
+// Практика
+import java.lang.Math.sqrt
+
+def fun(x: Double, y: Double) =
+  (sqrt(x) + sqrt(y)) / sqrt(x + y)
+
+fun(4, -4)
+
+def sqrtE(x: Double): Either[String, Double] =
+  if (x < 0) Left(s"$x < 0 !") else Right(sqrt(x))
+
+def divE(x: Double, y: Double): Either[String, Double] =
+  if (y == 0) Left("zero division !") else Right(x / y)
+
+// flatMap
+def funE(x: Double, y: Double): Either[String, Double] =
+  sqrtE(x).flatMap { sx =>
+    sqrtE(y).flatMap { sy =>
+      sqrtE(x + y).flatMap { sxy =>
+        divE(sx + sy, sxy)
+      }
+    }
+  }
+
+funE(4, 5)
+funE(-2, 5)
+funE(3, -4)
+funE(0, 0)
+
+// for-comprehension
+def funEF(x: Double, y: Double): Either[String, Double] =
+  for {
+    sx <- sqrtE(x)
+    sy <- sqrtE(y)
+    sxy <- sqrtE(x + y)
+    res <- divE(sx + sy, sxy)
+  } yield res
+
+funEF(4, 5)
+funEF(-2, 5)
+funEF(3, -4)
+funEF(0, 0)
 
 
-for (i <- preres.indices) {
-  if (preres(i)._1 > preres(i + 1)._1)
-    preres(i) = preres(i + 1)
-}
+// Памятка
+val rs = for { x <- Some(1) ; y <- None } yield (x, y)
+for { (k,v) <- Map("a" -> 1, "b" -> 2) } yield k
+//for { x <- Some(1) ; y <- Left("year") } yield x + y
+//for { x <- Some(2); y <- List(1,2,3,4) } yield x + y
