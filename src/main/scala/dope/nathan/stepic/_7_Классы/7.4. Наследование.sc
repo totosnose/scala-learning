@@ -70,3 +70,47 @@ trait Mammal extends Animal5
 trait Pegasus extends Animal5 with Greeter3 with Mammal
 
 // Практика
+// бинарное дерево Ints (алгебраический тип данных или ADT)
+
+// узел
+// sealed - чтобы невозможно было создать наследников Node в другом файле
+sealed trait Node {
+  // список значений в дереве слева направо
+  def values: List[String]
+
+  // добавление элемента слева
+  def +:(value: String): Node
+
+  // concat деревьев
+  // если известно конечное количество вариаций case class'ов, то можно определить на месте
+  def ++(node: Node): Node
+
+}
+
+// два подтипа
+// разветвление со ссылками на левый и правый узлы
+case class Branch(left: Node, right: Node) extends Node {
+  override def values = left.values ++ right.values
+
+  // по сути создается разветвление, где к левому поддереву добавляется элемент слева
+  override def +:(value: String) = Branch(value +: left, right)
+}
+
+// лист (конец дерева)
+case class Leaf(value: String) extends Node {
+  override def values = List(value)
+
+  // по сути создается новое разветвление, где листом слева будет новый лист (с новым значением),
+  // а листом справа будет текущий элемент
+  override def +:(value: String) = Branch(Leaf(value), this)
+}
+
+// простое дерево
+val tree = Branch(Branch(Leaf("one"), Leaf("two")), Leaf("three"))
+
+tree.values
+
+// результат добавление элемента слева
+val tree2 = "zero" +: tree
+
+tree2.values
