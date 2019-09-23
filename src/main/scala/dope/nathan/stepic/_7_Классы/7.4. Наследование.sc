@@ -81,9 +81,18 @@ sealed trait Node {
   // добавление элемента слева
   def +:(value: String): Node
 
+  // альтернативный подход добавления элемента в конец
+  def :+(value: String): Node =
+    this match {
+      case leaf@Leaf(_) => // проверка на конкретный экземпляр
+        Branch(leaf, Leaf(value))
+      case Branch(left, right) =>
+        Branch(left, right :+ value)
+    }
+
   // concat деревьев
-  // если известно конечное количество вариаций case class'ов, то можно определить на месте
-  def ++(node: Node): Node
+  // если известно конечное количество вариаций case class'ов, то можно определить метод на месте
+  def ++(node: Node): Node = Branch(this, node)
 
 }
 
@@ -114,3 +123,5 @@ tree.values
 val tree2 = "zero" +: tree
 
 tree2.values
+
+(tree ++ tree2 :+ "four").values

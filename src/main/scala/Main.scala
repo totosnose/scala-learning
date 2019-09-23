@@ -29,6 +29,7 @@ object Main extends App{
   }
 
 
+
   def swap(a: Array[Int], i: Int, j: Int): Unit = {
     val t = a(i); a(i) = a(j); a(j) = t
   }
