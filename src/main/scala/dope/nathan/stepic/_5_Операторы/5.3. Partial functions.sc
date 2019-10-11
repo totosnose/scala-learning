@@ -1,11 +1,11 @@
 // PartialFunction[-A, +B]
 // имеет тип входного и возвращаемого параметра, но есть и дополнительный метод:
-// def isDefinedAt(input:  A): Boolean ,
+// def isDefinedAt(input:  A): Boolean,
 // который для любого входного параметра, который он может обработать,
 // вернет true, а для остальных - false
 
-// - это "воплащение" pattern matching в типы, т.е. можно взять pattern matching
-// и, с помощью него, задать частичную функцию
+// - это "воплащение" pattern matching в типы,
+// т.е. можно взять pattern matching и, с помощью него, задать частичную функцию
 
 // частичная функция деления числа 10 на параметр без остатка
 val divide10: PartialFunction[Int, Int] = {
@@ -38,7 +38,8 @@ val list: List[Double] = List(4, 16, 25, -9)
 //val result = list.map(Math.log)
 val result = list.collect(log)
 
-// практика
+
+// -----------------------Практика -----------------------------------------------------------------
 case class Jar(name: String, value: Int, price: Double)
 val jars = List(
   Jar("Морской синий 6л", 6, 3000),

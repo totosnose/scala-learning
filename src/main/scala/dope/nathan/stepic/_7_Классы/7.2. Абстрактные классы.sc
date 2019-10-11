@@ -49,7 +49,8 @@ val animal4 = new Animal4 {
 val animal2 = new Animal2("Bobik"){}
 
 
-// Практика
+// -----------------------Практика -----------------------------------------------------------------
+
 abstract class User(name: String) {
   def friends: List[User]
   def friendsOfFriends: List[Any] =

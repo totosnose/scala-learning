@@ -40,7 +40,8 @@ def showDivide2(x: Int, y: Int): String =
     .getOrElse("null division")
 
 
-// практика
+// -----------------------Практика -----------------------------------------------------------------
+
 val string = "scala + [stepik] = love"
 
 string.indexOf("[")

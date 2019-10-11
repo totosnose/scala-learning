@@ -36,7 +36,7 @@ sqrt(7).flatMap(x => sqrt(x)) // вернет Right, если изначальн
 Right(1).flatMap(_ => Left(2)).flatMap(_ => Left(3))
 
 
-// homework
+// -----------------------Практика -----------------------------------------------------------------
 
 def euclid(a: Int, b: Int): (Int, Int) = {
   if (b > a) euclid(b, a).swap
