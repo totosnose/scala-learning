@@ -8,8 +8,9 @@ final case class NamedDouble(name: String, value: Double)
 // [A] - имя нового параметра типа; на него можно сослаться в конструкторе, теле класса и т.п.
 final case class Named[A](name: String, value: A)
 
-Named[Int]
-Named[Double]
+Named[Int]("Nathan", 6000)
+Named[Double]("Nathan", 6000.0d)
+
 
 // параметр типа не обязательно передавать явно при создании экземпляра обобщенного типа,
 // если компилятор сам может вычислить его из типов передаваемых аргументов
@@ -17,6 +18,8 @@ final case class Named2[A](name: String, value: A) {
   def withName(newName: String): Named[A] =
     Named(newName, value)
 }
+
+Named2("Nathan", 6000).withName("Anton")
 
 
 // когда ссылаемся на обобщенный тип, можно передавать его в другие обобщенные типы в теле
@@ -33,6 +36,13 @@ final case class Named4[A](name: String, value: A) {
     Named(name, f(value))
 }
 
+def fooo(a: Int): String  = s"${a.toString}000"
+
+Named4("Nathan", 6).mapValue(fooo)
+// или
+Named4("Nathan", 6).mapValue(x => s"${x.toString}000")
+
+
 // абстрактные типы (аналогично неабстрактным)
 trait Named5[T] {
   def name: String
@@ -43,11 +53,12 @@ trait Named5[T] {
 // при создании экземпляра абстрактного типа компилятор проверяет,
 // что выражения, которые определяют абстрактные члены имеют совместимый тип
 // с параметром типа, переданным в конкретную реализацию
+def foo: Int => Int = _ + 1
 def namedInt(n: String, v: Int): Named5[Int] =
   new Named5[Int]{
     def name = n
     def value = v
-//    def modify[Int](f: Int => Int) = namedInt(n, f(v)) // wtf?
+//    def modify[Int](f: Int => Int) = namedInt(n, foo(v)) // wtf?
     override def modify[A](f: A => A) = ???
   }
 
@@ -92,11 +103,120 @@ def dict[I <: Item] (items: I*): Dict1[I] = Dict1(items.toList)
 // параметры типов (type params) могут ссылаться друг на друга в ограничениях
 case class Dict2[K, V, I <: Item1[K, V]](items: List[I])
 
-// Рекурсивно ограниченная квантификация (f-bounded quantification)
+// Рекурсивно ограниченная квантификация (f-bounded quantification) (см. Бонус)
 trait Comparable[A <: Comparable[A]] {
   def compare(x: A): Int
 }
 
+// -----------------------Бонус --------------------------------------------------------------------
+// F-bounded quantification
+
+// отстой! как минимум, потому что возвращаемое значение - супертип
+{
+  trait Entity{
+    def create(): Entity
+    def read(id: Long): Option[Entity]
+    def update(f: Entity => Entity): Entity
+    def delete(id: Long): Unit
+  }
+
+  class Apple extends Entity {
+    override def create(): Entity = ???
+    override def read(id: Long): Option[Entity] = ???
+    override def update(f: Entity => Entity): Entity = ???
+    override def delete(id: Long): Unit = ???
+  }
+
+  class Orange extends Entity {
+    override def create(): Entity = ???
+    override def read(id: Long): Option[Entity] = ???
+    override def update(f: Entity => Entity): Entity = ???
+    override def delete(id: Long): Unit = ???
+  }
+}
+
+// лучше, но все еще отстой, потому что в качестве типа можно "просунуть", что угодно
+{
+  trait Entity[E]{
+    def create(): E
+    def read(id: Long): Option[E]
+    def update(f: E => E): E
+    def delete(id: Long): Unit
+  }
+
+  class Apple extends Entity[Apple] {
+    override def create(): Apple = ???
+    override def read(id: Long): Option[Apple] = ???
+    override def update(f: Apple => Apple): Apple = ???
+    override def delete(id: Long): Unit = ???
+  }
+
+  class Orange extends Entity[Orange] {
+    override def create(): Orange = ???
+    override def read(id: Long): Option[Orange] = ???
+    override def update(f: Orange => Orange): Orange = ???
+    override def delete(id: Long): Unit = ???
+  }
+
+  // тут начинается зашквар
+  class FlyingSaucer
+
+  class Mango extends Entity[FlyingSaucer] {
+    override def create(): FlyingSaucer = ???
+    override def read(id: Long): Option[FlyingSaucer] = ???
+    override def update(f: FlyingSaucer => FlyingSaucer): FlyingSaucer = ???
+    override def delete(id: Long): Unit = ???
+  }
+}
+
+// лучше, но отстой продолжается, т.к. соответствующие типы все еще можно "подсовывать" друг другу
+{
+  trait Entity[E <: Entity[E]]{
+    def create(): E
+    def read(id: Long): Option[E]
+    def update(f: E => E): E
+    def delete(id: Long): Unit
+  }
+
+  class Apple extends Entity[Apple] {
+    override def create(): Apple = ???
+    override def read(id: Long): Option[Apple] = ???
+    override def update(f: Apple => Apple): Apple = ???
+    override def delete(id: Long): Unit = ???
+  }
+
+  // тут начинается зашквар
+  class Orange extends Entity[Apple] {
+    override def delete(id: Long): Unit = ???
+    override def create() = ???
+    override def read(id: Long) = ???
+    override def update(f: Apple => Apple) = ???
+  }
+}
+
+// отлично! теперь невозможно сделать вышеописанную дичь
+{
+  trait Entity[E <: Entity[E]]{ self: E =>
+    def create(): E
+    def read(id: Long): Option[E]
+    def update(f: E => E): E
+    def delete(id: Long): Unit
+  }
+
+  class Apple extends Entity[Apple] {
+    override def create(): Apple = ???
+    override def read(id: Long): Option[Apple] = ???
+    override def update(f: Apple => Apple): Apple = ???
+    override def delete(id: Long): Unit = ???
+  }
+
+  class Orange extends Entity[Orange] {
+    override def create(): Orange = ???
+    override def read(id: Long): Option[Orange] = ???
+    override def update(f: Orange => Orange): Orange = ???
+    override def delete(id: Long): Unit = ???
+  }
+}
 
 // -----------------------Практика -----------------------------------------------------------------
 

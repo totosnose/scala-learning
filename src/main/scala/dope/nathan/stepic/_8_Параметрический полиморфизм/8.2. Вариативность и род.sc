@@ -1,3 +1,4 @@
+//import scala.util.Random
 // http://groz.github.io/scala/intro/variance/
 // https://docs.scala-lang.org/ru/tour/variances.html
 
@@ -8,7 +9,7 @@
 // ставим "+" - это означает, что будет проецироваться взаимоотношение между аргументами типа на
 // взаимоотношения между коллекциями: A <:< B -> Coll[A] <:< Coll[B]
 // другими словами: если тип A является подтипом типа B, тогда Coll от A является подтипом Coll от B
-// также необходимо гарантировать, что параметр тип будет встречаться в определениях только в ковариантных позициях
+// также необходимо гарантировать, что параметр типа будет встречаться в определениях только в ковариантных позициях
 trait Coll[+A] {
   def apply(i: Int): A
   def headOption: Option[A]
@@ -22,7 +23,7 @@ trait Coll[+A] {
 // ставим "-" - это означает, что будет проецироваться взаимоотношение между аргументами типа на
 // взаимоотношения между коллекциями: A <:< B -> Printer[B] <:< Printer[A]
 // другими словами: если тип A является подтипом типа B, тогда Printer от B является подтипом Printer от A
-// также необходимо гарантировать, что параметр тип будет встречаться в определениях только в контрвариантных позициях,
+// также необходимо гарантировать, что параметр типа будет встречаться в определениях только в контрвариантных позициях,
 // например:
 // + def print(a: A) - как аргумент типа
 // + def printList(aa: List[A]) - как аргумент типа другого ковариантного типа, который сам стоит в аргументной позиции
@@ -88,3 +89,34 @@ case class IntContainer[F[_]](value: F[Int])
 // в данном примере используется некое промежуточное обозначение типов, а именно:
 // X == (K, V)
 case class Dict[K, V, T[X] <: Seq[X]](items: T[(K, V)])
+
+
+//case class Named[+T](name: String, get: T)
+//
+//abstract class Animal(val tongue: String) {
+//  val age: Int
+//  def isAlive: Boolean
+//}
+//
+//case class Dog(age: Int) extends Animal("bark") {
+//  def isAlive = age < 13
+//}
+//
+//case class Cat(age: Int, diet: String) extends Animal("meow") {
+//  def isAlive = age < 15
+//}
+//
+//object ShroedingersCat extends Cat(0, "neutrino") {
+//  val rng = new Random()
+//  override def isAlive = rng.nextDouble() < 0.5
+//}
+//
+//def speak(na: Named[Animal]): Unit = {
+//  val animal = na.get
+//  if (animal.isAlive)
+//    println(s"${na.name}: ${animal.tongue}")
+//}
+//
+//val named = Named[Dog]("test", Dog(1))
+
+//speak(named)

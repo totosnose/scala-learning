@@ -33,12 +33,12 @@ val animal = new Animal {
 val mammal = new Mammal {}
 
 
-// блоки инициализации в абстрактных кллассах
+// блоки инициализации в абстрактных классах
 trait Animal4 {
   def name: String
   val greeting: String = s"Hi, I'm $name"
 
-  println("$name is created")
+  println(s"$name is created")
 }
 
 val animal4 = new Animal4 {

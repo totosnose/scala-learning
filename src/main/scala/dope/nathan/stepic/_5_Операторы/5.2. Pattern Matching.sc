@@ -52,13 +52,22 @@ numberName4(5)
 def numberName5(x: Int) = x match {
   case 1 ⇒ "one"
   case 2 ⇒ "two"
-  case v if v % 2 == 0 ⇒ "unknown even"
+  case x if x % 2 == 0 ⇒ "unknown even"
   case _ ⇒ "unknown odd"
 }
 numberName5(1)
 numberName5(2)
 numberName5(3)
 numberName5(4)
+
+def numberName6(x: Int) = x match {
+  case 1 ⇒ "one"
+  case 2 ⇒ "two"
+  case 3 | 4 ⇒ "three or four"
+  case x ⇒ "unknown"
+}
+
+numberName6(5)
 
 
 
@@ -95,6 +104,7 @@ def addressInfo3(address: Address): String = address match {
 // КОЛЛЕКЦИИ
 
 // возвращает сумму всех элементов списка (хвостовая рекурсия)
+@scala.annotation.tailrec
 def sum(xs: List[Int], acc: Int = 0): Int = xs match {
     case x :: rest => sum(rest, acc + x)  // разобраться
     case Nil       => acc                 // проверка до пустого списка
