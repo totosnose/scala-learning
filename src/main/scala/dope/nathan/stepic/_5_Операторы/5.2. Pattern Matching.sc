@@ -60,6 +60,15 @@ numberName5(2)
 numberName5(3)
 numberName5(4)
 
+def numberName6(x: Int) = x match {
+  case 1 ⇒ "one"
+  case 2 ⇒ "two"
+  case 3 | 4 ⇒ "three or four"
+  case `x` ⇒ "unknown"
+}
+
+numberName6(5)
+
 
 
 // CASE CLASS
@@ -95,6 +104,7 @@ def addressInfo3(address: Address): String = address match {
 // КОЛЛЕКЦИИ
 
 // возвращает сумму всех элементов списка (хвостовая рекурсия)
+@scala.annotation.tailrec
 def sum(xs: List[Int], start: Int = 0): Int = xs match {
     case x :: rest => sum(rest, start + x)  // разобраться
     case Nil       => start                 // проверка до пустого списка

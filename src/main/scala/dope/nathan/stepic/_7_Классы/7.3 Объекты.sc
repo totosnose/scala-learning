@@ -15,14 +15,31 @@ val pegasus: Pegasus.type = Pegasus
 
 // статика через объекты-компаньоны
 // (для классов, либо для абстрактных типов)
-class Cat(val name: String, val age: Int)
+class Cat (val name: String, val age: Int) {
+  def this(name: String) = this(name, age = 0)
+}
 
 // объект-компаньон имеет то же имя, что и тип
 // должен быть определен в том же исходном файле
 object Cat {
-  def apply(name: String, age: Int): Cat =
-    new Cat(name, age)
+  def apply(name: String, age: Int): Cat = new Cat(name, age)
+  def apply(name: String): Cat = new Cat(name)
+
+  def unapply(arg: Cat): Option[(String, Int)] = Some(arg.name, arg.age)
 }
+
+object Youth {
+  def unapply(arg: Cat)(newAge: Int): Option[(String, Int)] =
+    Some(arg.name, if (arg.age == 0) newAge else arg.age)
+}
+
+val cat = Cat("Walter", 50)
+val Cat(name: String, age: Int) = cat
+
+val newCat = Cat("Walter White")
+Youth.unapply(newCat)(49).map(x => Cat.apply(x._1, x._2))
+val Cat(name1: String, age1: Int) = newCat
+
 
 // "красивый" метод toString
 case object Unicorn

@@ -67,17 +67,17 @@ plus5c(1)(2)(3)
 // Композиция
 // - если есть две функции, и результат одной применить к результату другой,
 // то можно исользовать готовые методы для композиции
-val plus6 = (_:Int) + 1
-val mul = (_:Int) * 3
+val plus6 = (_: Int) + 1
+val mul = (_: Int) * 3
 
-val plusThenMul = plus6 andThen mul     // передаст результат plus6, как аргумент в mul
-val plusBeforeMul = plus6 compose  mul  // передаст результат mul, как аргумент в plus6
+val plusThenMul = plus6 andThen mul // передаст результат plus6, как аргумент в mul
+val plusBeforeMul = plus6 compose mul // передаст результат mul, как аргумент в plus6
 
 plusThenMul(5)
 plusBeforeMul(5)
 
 // Задачи
-val mul3 = 3*(_: Double)
+val mul3 = 3 * (_: Double)
 val pow2 = (x: Double) => x * x
 
 // Метод andThen превращается в функцию (эта-конверсия),
@@ -87,7 +87,7 @@ val pow2 = (x: Double) => x * x
 println((pow2.andThen[Double] _ )(mul3)(5))
 
 
-object LessonData{
+object LessonData {
   def searchInArray(cond: Int => Boolean, array: List[Int]): List[Int] = {
     array.filter(cond)
   }
@@ -95,12 +95,12 @@ object LessonData{
 
 val searchOdd: List[Int] => List[Int] = LessonData.searchInArray(_ % 2 == 1, _)
 val searchOdd2 = (LessonData.searchInArray _).curried(_ % 2 == 1)
-println(searchOdd(List(8,11,12))) // List(11)
+println(searchOdd(List(8, 11, 12))) // List(11)
 
 
 // -----------------------Практика -----------------------------------------------------------------
 // функция принимающая аргумент типа Int
-val add0 = (_: Int) + 1
+val add11 = (_: Int) + 1
 
 // (f: Int => Int) - можем передать функцию, которая возвращает Int
 // (...) => f(42) - в функцию f, которую передали ранее в качестве аргумента
@@ -108,14 +108,14 @@ val add0 = (_: Int) + 1
 val calc42 = (f: Int => Int) => f(42)
 
 // что-то вроде инкапсуляции?
-calc42(add0)
+calc42(add11)
 
 // или
 // лямбды могут принимать анонимные функции
 calc42(_ + 7)
 
 // передача функции, которая вычисляет сумму всех чисел от 1...n
-def sumTo(x: Int): Int = if(x == 0) 0 else x + sumTo(x - 1)
+def sumTo(x: Int): Int = if (x == 0) 0 else x + sumTo(x - 1)
 
 // сумма чисел от 1 до 42
 calc42(sumTo)
@@ -127,9 +127,45 @@ calc42(sumTo)
 // эту проблему решает Y-combinator, который находит fix-point (неподвижную точку)
 // необходимо искать неподвижную точку из функции, которая принимает на вход функцию
 // и возвращает ее рекурсивную версию
-// def fix(f: (=> - параметр функции f (рекурсивная версия) будет ленивым
+// def fix(f: (=> - параметр функции f (рекурсивная версия) будет ленивым (см. далее)
 def fix(f: (=> Int => Int) => Int => Int): Int => Int = f(fix(f))
-fix(rec => x => if(x == 0) 0 else x + rec(x - 1))(7)
+fix(rec => x => if (x == 0) 0 else x + rec(x - 1))(7)
 
 // запись рекурсии в анонимной форме
-calc42(fix(rec => x => if(x == 0) 0 else x + rec(x - 1)))
+calc42(fix(rec => x => if (x == 0) 0 else x + rec(x - 1)))
+
+// -----------------------Бонус -----------------------------------------------------------------
+// Подробнее про аргументы ленивой оценки
+
+def calculateData: String = {
+  print("Calculating expensive data!")
+  "some expensive data"
+}
+
+def dumbMediator(preconditions: Boolean = false, data: String): Option[String] = {
+  println("Applying dumb mediator")
+  if (preconditions) Some(data) else None
+}
+
+def smartMediator(preconditions: Boolean = false, data: => String): Option[String] = {
+  println("Applying smart mediator")
+  if (preconditions) Some(data) else None
+}
+
+println(smartMediator(data = calculateData))
+println(dumbMediator(data = calculateData))
+
+// Подробнее о записи функций
+
+// одна и та же функция!
+val f0 = (i: Int) => { i % 2 == 0 }
+val f3: Int => Boolean = i => i % 2 == 0
+val f4: Int => Boolean = _ % 2 == 0
+
+// implicit approach
+val add0 = (x: Int, y: Int) => { x + y }
+val add111 = (x: Int, y: Int) => x + y
+
+// explicit approach
+val add2: (Int, Int) => Int = (x,y) => { x + y }
+val add3: (Int, Int) => Int = (x,y) => x + y

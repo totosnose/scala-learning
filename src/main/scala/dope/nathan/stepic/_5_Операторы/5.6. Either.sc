@@ -33,8 +33,12 @@ sqrt(7).map(_.toString) // заменит Right одно типа на друг�
 sqrt(7).flatMap(x => sqrt(x)) // вернет Right, если изначально был Right и следующая функция тоже вернула Right
 
 // Метод flatMap действует до первой "ошибки"-Left
-Right(1).flatMap(_ => Left(2)).flatMap(_ => Left(3))
+//Right(1).flatMap(_ => Left(2)).flatMap(_ => Left(3))
 
+val maybeInt: Option[Int] = None
+maybeInt.map(Right[String, Int]).getOrElse(Left("Error"))
+// или
+maybeInt.toRight("Error")
 
 // -----------------------Практика -----------------------------------------------------------------
 

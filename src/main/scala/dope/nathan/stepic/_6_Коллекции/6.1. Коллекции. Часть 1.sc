@@ -57,9 +57,8 @@ val char: Char = course(3)
 // Builder[E, Coll] - спец. промежуточный накопитель для построения коллекций
 
 import scala.collection.mutable
-import scala.collection.mutable.Buffer
 
-val string = Buffer[String]()
+val string = mutable.Buffer[String]()
 
 string += "scala"
 string += "+"
@@ -108,6 +107,7 @@ import scala.util.Random
 val list = List(2, 5, 7, 7, 4)
 
 list.sorted
+list.dropWhile(_ != 1)
 
 // список с рандомными элементами
 /*List.fill(количество элементов)(вычисляемые элементы)*/
@@ -115,6 +115,7 @@ val randomList = List.fill(Random.nextInt(10000))(Random.nextInt(1000))
 
 // сортировка слиянием (для односвязных списков - ок)
 // as & bs - заранее отсортированные списки
+@scala.annotation.tailrec
 def merge(as: List[Int], bs: List[Int], acc: List[Int] = Nil): List[Int] = {
   // проверяем не пустой ли первый список
   as match {
@@ -134,7 +135,7 @@ merge(List(2, 5, 6), List(1, 4, 9))
 
 // непосредственно алгоритм сортировки
 def mergeSort(as: List[Int]): List[Int] = as match {
-  case Nil | (_ :: Nil) => as // если коллекция пустая или состоит из одного элемента
+  case Nil | _ :: Nil => as // если коллекция пустая или состоит из одного элемента
   case _ =>
     val (left, right) = as.splitAt(as.length / 2) // разрежет список на две части
 
