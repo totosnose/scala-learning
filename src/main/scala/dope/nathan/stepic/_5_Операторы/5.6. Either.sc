@@ -1,6 +1,6 @@
 // Either[A, B] - исключающее или (одно из двух)
 // подтип Left[A, B] - содержит A
-// подтип Left[A, B] - содержит B
+// подтип Right[A, B] - содержит B
 // (см конвенцию)
 
 val numOrStr1: Either[Double, String] = Left(2.12)

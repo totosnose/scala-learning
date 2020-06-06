@@ -1,8 +1,8 @@
 // СОПОСТАВЛЕНИЕ С ОБРАЗЦОМ
 // - "самое богатое" ветвление в Scala
 
-val x = 1
-x match {
+val x0 = 1
+x0 match {
   case 1 ⇒ "one"
   case 2 ⇒ "two"
 }
@@ -52,7 +52,7 @@ numberName4(5)
 def numberName5(x: Int) = x match {
   case 1 ⇒ "one"
   case 2 ⇒ "two"
-  case x if x % 2 == 0 ⇒ "unknown even"
+  case v if v % 2 == 0 ⇒ "unknown even"
   case _ ⇒ "unknown odd"
 }
 numberName5(1)
@@ -95,9 +95,9 @@ def addressInfo3(address: Address): String = address match {
 // КОЛЛЕКЦИИ
 
 // возвращает сумму всех элементов списка (хвостовая рекурсия)
-def sum(xs: List[Int], start: Int = 0): Int = xs match {
-    case x :: rest => sum(rest, start + x)  // разобраться
-    case Nil       => start                 // проверка до пустого списка
+def sum(xs: List[Int], acc: Int = 0): Int = xs match {
+    case x :: rest => sum(rest, acc + x)  // разобраться
+    case Nil       => acc                 // проверка до пустого списка
   }
 
 // суммирование для списков, как минимум, из 3х элементов

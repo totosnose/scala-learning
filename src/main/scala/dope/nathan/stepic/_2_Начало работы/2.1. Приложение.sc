@@ -8,7 +8,7 @@ object Main extends App {
 }
 
 // java
-object Main {
+object Main2 {
   def main(args: Array[String]): Unit = {
     println("hello friend")
   }
@@ -17,10 +17,10 @@ object Main {
 // чтение с консоли
 import scala.io.StdIn.readLine
 
-object Main {
+object Main3 {
   def main(args: Array[String]): Unit = {
     println("hello, enter line")
-    val line= readLine()
+    val line = readLine()
     print("you entered: ")
     println(line)
   }

@@ -136,3 +136,6 @@ dict.add("pear", "delicious").add("melon", "yellow")
 
 dict.map(_.toUpperCase)
 dict.map(_.length)
+
+// про View Bounds and Context Bounds
+// https://stackoverflow.com/questions/4465948/what-are-scala-context-and-view-bounds
