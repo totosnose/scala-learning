@@ -19,11 +19,11 @@ class Person0(val name: String, val age: Int) {
 //
 class MyProg {
   private val props = new Properties()
-  props.loaps(new FileReader("myprog.properties"))
+  props.load(new FileReader("myprog.properties"))
   // инструкция выше - часть гл. конструктора
 }
 
-// избавиться от дополнительный конструкторов,
+// избавиться от дополнительных конструкторов,
 // определяя аргументы по-умолчанию в гл. конструкторе
 class Person1(val name: String = "", private var age: Int) {}
 

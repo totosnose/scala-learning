@@ -35,3 +35,38 @@ val barney = myFace.join("Barney")  // имеет тип myFace.Member
 // класс myFace.Member не совместим с классом chatter.Member
 
 // обходы вышеприведенной проблемы:
+// 1. Определение Member в другом месте (companion object)
+object Network1 {
+  class Member(val name: String) {
+    val contacts = new ArrayBuffer[Member]
+  }
+}
+class Network1 {
+  private val members = new ArrayBuffer[Network1.Member]
+
+  def join(name: String): Network1.Member = {
+    val m = new Network1.Member(name)
+    members += m
+    m
+  }
+}
+
+// 2. Использование проекции типов (type projection) Network#Member (член любой группы) (см гл.18)
+class Network2 {
+  class Member(val name: String) {
+    val contacts = new ArrayBuffer[Network#Member]
+  }
+}
+
+// во вложенном классе доступна ссылка this, указывающая на внешний класс.
+// можно определить псевдоним для этой ссылки
+class Network3(val name: String) { outer =>
+  class Member(val name: String) {
+    def description = s"$name inside ${outer.name}"
+  }
+
+  def display: String = new Member("in").description
+}
+
+val net = new Network3("out")
+net.display
